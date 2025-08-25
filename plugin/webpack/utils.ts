@@ -35,12 +35,8 @@ export function getPluginJson() {
 }
 
 export function getCPConfigVersion() {
-  const cprcJson = path.resolve(process.cwd(), './.config', '.cprc.json');
+  const cprcJson = path.resolve(process.cwd(), '.cprc.json');
   return fs.existsSync(cprcJson) ? loadJson(cprcJson).version : { version: 'unknown' };
-}
-
-export function hasReadme() {
-  return fs.existsSync(path.resolve(process.cwd(), SOURCE_DIR, 'README.md'));
 }
 
 // Support bundling nested plugins by finding all plugin.json files in src directory

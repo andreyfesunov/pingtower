@@ -72,6 +72,9 @@ importers:
       '@types/react':
         specifier: ^19.1.11
         version: 19.1.11
+      '@types/webpack-livereload-plugin':
+        specifier: ^2.3.6
+        version: 2.3.6
       '@typescript-eslint/eslint-plugin':
         specifier: ^8.40.0
         version: 8.40.0(@typescript-eslint/parser@8.40.0(eslint@9.34.0)(typescript@5.9.2))(eslint@9.34.0)(typescript@5.9.2)
@@ -927,17 +930,35 @@ packages:
   '@types/sizzle@2.3.9':
     resolution: {integrity: sha512-xzLEyKB50yqCUPUJkIsrVvoWNfFUbIZI+RspLWt8u+tIW/BetMBZtgV2LY/2o+tYH8dRvQ+eoPf3NdhQCcLE2w==}
 
+  '@types/source-list-map@0.1.6':
+    resolution: {integrity: sha512-5JcVt1u5HDmlXkwOD2nslZVllBBc7HDuOICfiZah2Z0is8M8g+ddAEawbmd3VjedfDHBzxCaXLs07QEmb7y54g==}
+
   '@types/string-hash@1.1.3':
     resolution: {integrity: sha512-p6skq756fJWiA59g2Uss+cMl6tpoDGuCBuxG0SI1t0NwJmYOU66LAMS6QiCgu7cUh3/hYCaMl5phcCW1JP5wOA==}
 
   '@types/systemjs@6.15.3':
     resolution: {integrity: sha512-STyj2LUevlyVqEQ1wjOORLQTJbNnM2V1DNzmemxVHlOovdKBKqccALDbR9aCcTRThhcXzew88SMbN4SMm6JOcw==}
 
+  '@types/tapable@1.0.12':
+    resolution: {integrity: sha512-bTHG8fcxEqv1M9+TD14P8ok8hjxoOCkfKc8XXLaaD05kI7ohpeI956jtDOD3XHKBQrlyPughUtzm1jtVhHpA5Q==}
+
   '@types/trusted-types@2.0.7':
     resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
 
+  '@types/uglify-js@3.17.5':
+    resolution: {integrity: sha512-TU+fZFBTBcXj/GpDpDaBmgWk/gn96kMZ+uocaFUlV2f8a6WdMzzI44QBCmGcCiYR0Y6ZlNRiyUyKKt5nl/lbzQ==}
+
   '@types/use-sync-external-store@0.0.6':
     resolution: {integrity: sha512-zFDAD+tlpf2r4asuHEj0XH6pY6i0g5NeAHPn+15wk3BV6JA69eERFXC1gyGThDkVa1zCyKr5jox1+2LbV/AMLg==}
+
+  '@types/webpack-livereload-plugin@2.3.6':
+    resolution: {integrity: sha512-H8nZSOWSiY/6kCpOmbutZPu7Sai1xyEXo/SrXQPCymMPNBwpYWAdOsjKqr32d+IrVjnn9GGgKSYY34TEPRxJ/A==}
+
+  '@types/webpack-sources@3.2.3':
+    resolution: {integrity: sha512-4nZOdMwSPHZ4pTEZzSp0AsTM4K7Qmu40UKW4tJDiOVs20UzYF9l+qUe4s0ftfN0pin06n+5cWWDJXH+sbhAiDw==}
+
+  '@types/webpack@4.41.40':
+    resolution: {integrity: sha512-u6kMFSBM9HcoTpUXnL6mt2HSzftqb3JgYV6oxIgL2dl6sX6aCa5k6SOkzv5DuZjBTPUE/dJltKtwwuqrkZHpfw==}
 
   '@types/yargs-parser@21.0.3':
     resolution: {integrity: sha512-I4q9QU9MQv4oEOz4tAHJtNz1cwuLxn2F3xcc2iV5WdqLPpUnj30aUuxt1mAxYTG+oe8CZMV/+6rU4S4gRDzqtQ==}
@@ -3246,6 +3267,10 @@ packages:
     resolution: {integrity: sha512-UjgapumWlbMhkBgzT7Ykc5YXUT46F0iKu8SGXq0bcwP5dz/h0Plj6enJqjz1Zbq2l5WaqYnrVbwWOWMyF3F47g==}
     engines: {node: '>=0.10.0'}
 
+  source-map@0.7.6:
+    resolution: {integrity: sha512-i5uvt8C3ikiWeNZSVZNWcfZPItFQOsYTUAOkcUPGd8DqDy1uOUikjt5dG+uRlwyvR108Fb9DOd4GvXfT0N2/uQ==}
+    engines: {node: '>= 12'}
+
   spdx-exceptions@2.5.0:
     resolution: {integrity: sha512-PiU42r+xO4UbUS1buo3LPJkjlO7430Xn5SVAhdpzzsPHsjbYVflnnFdATgabnLude+Cqu25p6N+g2lw/PFsa4w==}
 
@@ -4684,14 +4709,41 @@ snapshots:
 
   '@types/sizzle@2.3.9': {}
 
+  '@types/source-list-map@0.1.6': {}
+
   '@types/string-hash@1.1.3': {}
 
   '@types/systemjs@6.15.3': {}
 
+  '@types/tapable@1.0.12': {}
+
   '@types/trusted-types@2.0.7':
     optional: true
 
+  '@types/uglify-js@3.17.5':
+    dependencies:
+      source-map: 0.6.1
+
   '@types/use-sync-external-store@0.0.6': {}
+
+  '@types/webpack-livereload-plugin@2.3.6':
+    dependencies:
+      '@types/webpack': 4.41.40
+
+  '@types/webpack-sources@3.2.3':
+    dependencies:
+      '@types/node': 24.3.0
+      '@types/source-list-map': 0.1.6
+      source-map: 0.7.6
+
+  '@types/webpack@4.41.40':
+    dependencies:
+      '@types/node': 24.3.0
+      '@types/tapable': 1.0.12
+      '@types/uglify-js': 3.17.5
+      '@types/webpack-sources': 3.2.3
+      anymatch: 3.1.3
+      source-map: 0.6.1
 
   '@types/yargs-parser@21.0.3': {}
 
@@ -7260,6 +7312,8 @@ snapshots:
   source-map@0.5.7: {}
 
   source-map@0.6.1: {}
+
+  source-map@0.7.6: {}
 
   spdx-exceptions@2.5.0: {}
 

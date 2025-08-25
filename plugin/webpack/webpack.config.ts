@@ -11,7 +11,7 @@ import VirtualModulesPlugin from 'webpack-virtual-modules';
 
 import { BuildModeWebpackPlugin } from './BuildModeWebpackPlugin.ts';
 import { DIST_DIR, SOURCE_DIR } from './constants.ts';
-import { getCPConfigVersion, getEntries, getPackageJson, getPluginJson, hasReadme, isWSL } from './utils.ts';
+import { getCPConfigVersion, getEntries, getPackageJson, getPluginJson, isWSL } from './utils.ts';
 
 const pluginJson = getPluginJson();
 const cpVersion = getCPConfigVersion();
@@ -37,7 +37,7 @@ const config = async (env: Env): Promise<Configuration> => {
       type: 'filesystem',
       buildDependencies: {
         // __filename doesn't work in Node 24
-        config: [path.resolve(process.cwd(), '.config', 'webpack', 'webpack.config.ts')],
+        config: [path.resolve(process.cwd(), 'webpack', 'webpack.config.ts')],
       },
     },
 
@@ -194,12 +194,8 @@ const config = async (env: Env): Promise<Configuration> => {
       }),
       new CopyWebpackPlugin({
         patterns: [
-          // If src/README.md exists use it; otherwise the root README
           // To `compiler.options.output`
-          { from: hasReadme() ? 'README.md' : '../README.md', to: '.', force: true },
           { from: 'plugin.json', to: '.' },
-          { from: '../LICENSE', to: '.' },
-          { from: '../CHANGELOG.md', to: '.', force: true },
           { from: '**/*.json', to: '.' },
           { from: '**/*.svg', to: '.', noErrorOnMissing: true },
           { from: '**/*.png', to: '.', noErrorOnMissing: true },
@@ -210,11 +206,11 @@ const config = async (env: Env): Promise<Configuration> => {
           { from: '**/query_help.md', to: '.', noErrorOnMissing: true },
         ],
       }),
-      // Replace certain template-variables in the README and plugin.json
+      // Replace certain template-variables in the plugin.json
       new ReplaceInFileWebpackPlugin([
         {
           dir: DIST_DIR,
-          files: ['plugin.json', 'README.md'],
+          files: ['plugin.json'],
           rules: [
             {
               search: /\%VERSION\%/g,
