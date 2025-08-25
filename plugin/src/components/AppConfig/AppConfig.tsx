@@ -4,7 +4,6 @@ import { css } from '@emotion/css';
 import { AppPluginMeta, GrafanaTheme2, PluginConfigPageProps, PluginMeta } from '@grafana/data';
 import { getBackendSrv } from '@grafana/runtime';
 import { Button, Field, FieldSet, Input, SecretInput, useStyles2 } from '@grafana/ui';
-import { testIds } from '../testIds';
 
 type AppPluginSettings = {
   apiUrl?: string;
@@ -74,7 +73,6 @@ const AppConfig = ({ plugin }: AppConfigProps) => {
           <SecretInput
             width={60}
             id="config-api-key"
-            data-testid={testIds.appConfig.apiKey}
             name="apiKey"
             value={state.apiKey}
             isConfigured={state.isApiKeySet}
@@ -89,7 +87,6 @@ const AppConfig = ({ plugin }: AppConfigProps) => {
             width={60}
             name="apiUrl"
             id="config-api-url"
-            data-testid={testIds.appConfig.apiUrl}
             value={state.apiUrl}
             placeholder={`E.g.: http://mywebsite.com/api/v1`}
             onChange={onChange}
@@ -97,7 +94,7 @@ const AppConfig = ({ plugin }: AppConfigProps) => {
         </Field>
 
         <div className={s.marginTop}>
-          <Button type="submit" data-testid={testIds.appConfig.submit} disabled={isSubmitDisabled}>
+          <Button type="submit" disabled={isSubmitDisabled}>
             Save API settings
           </Button>
         </div>

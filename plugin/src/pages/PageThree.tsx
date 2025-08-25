@@ -5,7 +5,6 @@ import { GrafanaTheme2 } from '@grafana/data';
 import { useStyles2 } from '@grafana/ui';
 import { prefixRoute } from '../utils/utils.routing';
 import { ROUTES } from '../constants';
-import { testIds } from '../components/testIds';
 import { PluginPage } from '@grafana/runtime';
 
 function PageThree() {
@@ -14,7 +13,7 @@ function PageThree() {
 
   return (
     <PluginPage>
-      <div data-testid={testIds.pageThree.container}>
+      <div>
         This is page three.
         <br />
         <br />
