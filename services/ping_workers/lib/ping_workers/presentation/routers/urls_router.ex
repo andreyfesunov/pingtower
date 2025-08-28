@@ -1,4 +1,4 @@
-defmodule PingWorkers.Presentation.UrlsRouter do
+defmodule PingWorkers.Presentation.Routers.UrlsRouter do
   use Plug.Router
 
   plug(:match)
