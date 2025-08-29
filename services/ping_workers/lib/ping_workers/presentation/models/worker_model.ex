@@ -7,12 +7,12 @@ defmodule PingWorkers.Presentation.Models.WorkerModel do
           period: String.t()
         }
 
-  @spec new(Uuid.t(), Url.t(), PeriodType.t()) :: t()
+  @spec new(String.t(), String.t(), String.t()) :: t()
   def new(id, url, period) do
     %__MODULE__{
-      id: to_string(id),
-      url: to_string(url),
-      period: to_string(period)
+      id: id,
+      url: url,
+      period: period
     }
   end
 end
@@ -21,6 +21,9 @@ defimpl Jason.Encoder, for: PingWorkers.Presentation.Models.WorkerModel do
   alias PingWorkers.Presentation.Models.WorkerModel
 
   def encode(%WorkerModel{} = model, opts) do
-    Jason.Encode.map(model, opts)
+    model
+    |> Map.from_struct()
+    |> Map.delete(:__struct__)
+    |> Jason.Encode.map(opts)
   end
 end
