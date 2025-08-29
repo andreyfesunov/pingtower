@@ -23,7 +23,8 @@ defmodule PingWorkers.MixProject do
   defp deps do
     [
       {:plug_cowboy, "2.7.4"},
-      {:jason, "1.4.4"}
+      {:jason, "1.4.4"},
+      {:uuid, "1.1.8"}
     ]
   end
 end
