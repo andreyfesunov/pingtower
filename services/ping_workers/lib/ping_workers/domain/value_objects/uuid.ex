@@ -1,4 +1,8 @@
 defmodule PingWorkers.Domain.ValueObjects.Uuid do
+  @moduledoc """
+  Value Object for UUID validation.
+  """
+
   @type t :: <<_::288>>
 
   @spec new() :: t()

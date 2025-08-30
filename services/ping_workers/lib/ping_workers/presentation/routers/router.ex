@@ -1,4 +1,8 @@
 defmodule PingWorkers.Presentation.Routers.Router do
+  @moduledoc """
+  Router for the application.
+  """
+
   use Plug.Router
 
   plug(Plug.Logger)

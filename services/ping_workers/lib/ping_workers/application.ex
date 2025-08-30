@@ -1,4 +1,8 @@
 defmodule PingWorkers.Application do
+  @moduledoc """
+  Application for PingWorkers.
+  """
+
   use Application
 
   @impl true

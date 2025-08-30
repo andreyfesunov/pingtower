@@ -1,6 +1,10 @@
 defmodule PingWorkers.Application.Usecases.CreateWorkerUsecase do
-  alias PingWorkers.Domain.Models.Worker
+  @moduledoc """
+  Usecase, that creates `Worker`.
+  """
+
   alias PingWorkers.Application.Commands.CreateWorkerCommand
+  alias PingWorkers.Domain.Models.Worker
 
   @spec handle(CreateWorkerCommand.t()) :: Worker.t()
   def handle(command) do

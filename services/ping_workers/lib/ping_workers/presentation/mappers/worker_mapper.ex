@@ -1,4 +1,8 @@
 defmodule PingWorkers.Presentation.Mappers.WorkerMapper do
+  @moduledoc """
+  Mapper for `Worker` to `WorkerModel`.
+  """
+
   alias PingWorkers.Domain.Models.Worker
   alias PingWorkers.Presentation.Models.WorkerModel
 

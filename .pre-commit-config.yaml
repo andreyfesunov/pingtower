@@ -1,0 +1,26 @@
+repos:
+  - repo: local
+    hooks:
+      - id: mix-format
+        name: mix format
+        entry: mix format --check-equivalent
+        language: system
+        types: [file]
+        files: \.exs?$
+        args: []
+
+      - id: mix-credo
+        name: mix credo
+        entry: bash -c "cd services/ping_workers/ && mix credo --strict"
+        language: system
+        types: [file]
+        files: \.exs?$
+        args: []
+
+      - id: mix-dialyzer
+        name: mix dialyzer
+        entry: bash -c "cd services/ping_workers/ && mix dialyzer --halt-exit-status"
+        language: system
+        types: [file]
+        files: \.exs?$
+        args: []

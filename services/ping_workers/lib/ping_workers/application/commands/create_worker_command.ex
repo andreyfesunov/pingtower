@@ -1,4 +1,8 @@
 defmodule PingWorkers.Application.Commands.CreateWorkerCommand do
+  @moduledoc """
+  Command for `CreateWorkerUsecase`.
+  """
+
   alias PingWorkers.Domain.Enums.PeriodType
   alias PingWorkers.Domain.ValueObjects.Url
 

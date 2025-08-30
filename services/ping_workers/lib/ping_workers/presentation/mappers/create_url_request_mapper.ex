@@ -1,4 +1,10 @@
 defmodule PingWorkers.Presentation.Mappers.CreateUrlRequestMapper do
+  @moduledoc """
+  Mapper for create url request.
+
+  The module contains function to map `CreateUrlRequestModel` to `CreateWorkerCommand`.
+  """
+
   alias PingWorkers.Application.Commands.CreateWorkerCommand
   alias PingWorkers.Presentation.Requests.CreateUrlRequestModel
 

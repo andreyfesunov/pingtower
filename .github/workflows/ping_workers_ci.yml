@@ -1,0 +1,28 @@
+name: ping_workers_ci
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: erlef/setup-beam@v1
+        with:
+          elixir-version: "1.18.4"
+          otp-version: "27.0"
+
+      - name: Go to ping_workers directory
+        run: cd services/ping_workers
+
+      - name: Install dependencies
+        run: mix deps.get
+
+      - name: Run tests
+        run: mix test
+
+      - name: Run Dialyzer
+        run: mix dialyzer
+
+      - name: Run Credo
+        run: mix credo --strict

@@ -1,8 +1,12 @@
 defmodule PingWorkers.Presentation.Routers.UrlsRouter do
-  alias PingWorkers.Presentation.Mappers.WorkerMapper
+  @moduledoc """
+  Router for URLs.
+  """
+
   alias PingWorkers.Application.Usecases.CreateWorkerUsecase
-  alias PingWorkers.Presentation.Requests.CreateUrlRequestModel
   alias PingWorkers.Presentation.Mappers.CreateUrlRequestMapper
+  alias PingWorkers.Presentation.Mappers.WorkerMapper
+  alias PingWorkers.Presentation.Requests.CreateUrlRequestModel
 
   use Plug.Router
 

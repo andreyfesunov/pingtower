@@ -1,4 +1,8 @@
 defmodule PingWorkers.Presentation.Models.WorkerModel do
+  @moduledoc """
+  Output model for `Worker`.
+  """
+
   defstruct [:id, :url, :period]
 
   @type t :: %__MODULE__{

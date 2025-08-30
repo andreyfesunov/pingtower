@@ -1,4 +1,10 @@
 defmodule PingWorkers.Presentation.Requests.CreateUrlRequestModel do
+  @moduledoc """
+  Input model for `UrlsRouter`. Used to create `Worker`.
+
+  The module contains function to validate and create `CreateUrlRequestModel`.
+  """
+
   alias PingWorkers.Domain.Enums.PeriodType
   alias PingWorkers.Domain.ValueObjects.Url
 

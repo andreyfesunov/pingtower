@@ -1,10 +1,16 @@
 defmodule PingWorkers.Domain.Enums.PeriodType do
+  @moduledoc """
+  Period for `Worker`. It can be: minute, hour, day, week, month.
+
+  The module contains functions to convert between period type and string.
+  """
+
   @type t :: :minute | :hour | :day | :week | :month
 
-  @periods [:minute, :hour, :day, :week, :month]
+  @values [:minute, :hour, :day, :week, :month]
 
-  @spec values() :: [t()]
-  def values, do: @periods
+  @spec values() :: [t(), ...]
+  def values, do: @values
 
   @spec from_string(String.t()) :: t() | nil
   def from_string(period_str) when is_binary(period_str) do

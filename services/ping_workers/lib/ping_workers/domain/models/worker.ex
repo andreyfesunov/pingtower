@@ -1,7 +1,13 @@
 defmodule PingWorkers.Domain.Models.Worker do
-  alias PingWorkers.Domain.ValueObjects.Uuid
-  alias PingWorkers.Domain.ValueObjects.Url
+  @moduledoc """
+  Worker model.
+
+  The model contains id, url and period.
+  """
+
   alias PingWorkers.Domain.Enums.PeriodType
+  alias PingWorkers.Domain.ValueObjects.Url
+  alias PingWorkers.Domain.ValueObjects.Uuid
 
   defstruct [:id, :url, :period]
 

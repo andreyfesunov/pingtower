@@ -1,4 +1,4 @@
-.PHONY: setup run iex compile release clean
+.PHONY: setup run iex compile release clean dialyzer credo
 
 setup:
 	mix deps.get
@@ -19,3 +19,8 @@ clean:
 	mix clean
 	rm -rf _build deps
 
+dialyzer:
+	mix dialyzer
+
+credo:
+	mix credo --strict

@@ -7,7 +7,8 @@ defmodule PingWorkers.MixProject do
       version: "0.1.0",
       elixir: "~> 1.18",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      dialyzer: dialyzer()
     ]
   end
 
@@ -24,7 +25,20 @@ defmodule PingWorkers.MixProject do
     [
       {:plug_cowboy, "2.7.4"},
       {:jason, "1.4.4"},
-      {:uuid, "1.1.8"}
+      {:uuid, "1.1.8"},
+      {:dialyxir, "1.4.6", only: [:dev], runtime: false},
+      {:credo, "1.7.12", only: [:dev, :test], runtime: false}
+    ]
+  end
+
+  defp dialyzer do
+    [
+      flags: [
+        :error_handling,
+        :underspecs,
+        :unknown,
+        :unmatched_returns
+      ]
     ]
   end
 end
