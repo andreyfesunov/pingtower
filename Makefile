@@ -1,4 +1,4 @@
-.PHONY: help up down logs restart clean plugin-dev plugin-build grafana mongodb grafana-logs mongodb-logs
+.PHONY: help up down logs restart clean plugin-dev plugin-build grafana mongodb rabbitmq grafana-logs mongodb-logs rabbitmq-logs
 
 # Default target
 help:
@@ -9,8 +9,10 @@ help:
 	@echo "  make restart         - Restart all services"
 	@echo "  make grafana         - Start only Grafana"
 	@echo "  make mongodb         - Start only MongoDB"
+	@echo "  make rabbitmq        - Start only RabbitMQ"
 	@echo "  make grafana-logs    - Show Grafana logs"
 	@echo "  make mongodb-logs    - Show MongoDB logs"
+	@echo "  make rabbitmq-logs   - Show RabbitMQ logs"
 	@echo "  make plugin-dev      - Start plugin development mode"
 	@echo "  make plugin-build    - Build plugin for production"
 	@echo "  make clean           - Clean all data"
@@ -41,6 +43,13 @@ mongodb:
 mongodb-logs:
 	cd infrastructure/docker && docker compose logs -f mongodb
 
+# RabbitMQ specific
+rabbitmq:
+	cd infrastructure/docker && docker compose up -d rabbitmq
+
+rabbitmq-logs:
+	cd infrastructure/docker && docker compose logs -f rabbitmq
+
 # Plugin development
 plugin-dev:
 	cd plugin && pnpm install && pnpm run dev
@@ -60,3 +69,5 @@ clean:
 urls:
 	@echo "Grafana:    http://localhost:3000 (admin/admin)"
 	@echo "MongoDB:    mongodb://localhost:27017 (admin/admin)"
+	@echo "RabbitMQ:   amqp://localhost:5672 (admin/admin)"
+	@echo "RMQ UI:     http://localhost:15672 (admin/admin)"

@@ -4,7 +4,9 @@ defmodule PingWorkers.Application.Usecases.CreateWorkerUsecase do
   """
 
   alias PingWorkers.Application.Commands.CreateWorkerCommand
+  alias PingWorkers.Domain.Events.WorkerCreated
   alias PingWorkers.Domain.Models.Worker
+  alias PingWorkers.Infrastructure.Messaging.EventPublisher
   alias PingWorkers.Infrastructure.Repositories.WorkerRepository
 
   @doc """
@@ -15,9 +17,21 @@ defmodule PingWorkers.Application.Usecases.CreateWorkerUsecase do
     worker = Worker.new(command.url, command.period)
 
     case WorkerRepository.exists(worker) do
-      {:error, reason} -> {:error, reason}
-      {:ok, true} -> {:error, "Worker with provided URL already exists."}
-      {:ok, false} -> WorkerRepository.create(worker)
+      {:error, reason} ->
+        {:error, reason}
+
+      {:ok, true} ->
+        {:error, "Worker with provided URL already exists."}
+
+      {:ok, false} ->
+        case WorkerRepository.create(worker) do
+          {:ok, worker} ->
+            EventPublisher.publish_event(WorkerCreated.from_model(worker))
+            {:ok, worker}
+
+          {:error, reason} ->
+            {:error, reason}
+        end
     end
   end
 end

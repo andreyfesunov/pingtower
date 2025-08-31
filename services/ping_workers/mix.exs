@@ -27,6 +27,7 @@ defmodule PingWorkers.MixProject do
       {:jason, "1.4.4"},
       {:uuid, "1.1.8"},
       {:mongodb_driver, "1.5.0"},
+      {:amqp, "4.1.0"},
       {:dialyxir, "1.4.6", only: [:dev], runtime: false},
       {:credo, "1.7.12", only: [:dev, :test], runtime: false}
     ]

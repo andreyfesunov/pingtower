@@ -9,6 +9,8 @@ defmodule PingWorkers.Application do
   def start(_type, _args) do
     children = [
       {PingWorkers.Infrastructure.Facades.MongodbFacade, []},
+      {PingWorkers.Infrastructure.Facades.AmqpFacade, []},
+      {PingWorkers.Infrastructure.Messaging.EventPublisher, []},
       {Plug.Cowboy,
        scheme: :http, plug: PingWorkers.Presentation.Routers.Router, options: [port: 4000]}
     ]
@@ -17,6 +19,7 @@ defmodule PingWorkers.Application do
     {:ok, pid} = Supervisor.start_link(children, opts)
 
     {:ok, _} = Application.ensure_all_started(:mongodb_driver)
+    {:ok, _} = Application.ensure_all_started(:amqp)
 
     {:ok, pid}
   end

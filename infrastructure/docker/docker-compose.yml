@@ -29,9 +29,26 @@ services:
     networks:
       - pingtower-network
 
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: pingtower-rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"   # AMQP port
+      - "15672:15672" # Management UI port
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+      - RABBITMQ_DEFAULT_VHOST=/
+    volumes:
+      - rabbitmq-storage:/var/lib/rabbitmq
+    networks:
+      - pingtower-network
+
 volumes:
   grafana-storage:
   mongodb-storage:
+  rabbitmq-storage:
 
 networks:
   pingtower-network:

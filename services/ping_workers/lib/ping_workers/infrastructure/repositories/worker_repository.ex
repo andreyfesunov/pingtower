@@ -57,8 +57,10 @@ defmodule PingWorkers.Infrastructure.Repositories.WorkerRepository do
 
   def parse_worker(doc) do
     with {:ok, uuid} <- extract_uuid_from_doc(doc),
-         {:ok, period} <- PeriodType.from_string(doc["period"]),
-         {:ok, url} <- Url.new(doc["url"]) do
+         {:ok, period_raw} when is_binary(period_raw) <- Map.fetch(doc, "period"),
+         {:ok, period} <- PeriodType.from_string(period_raw),
+         {:ok, url_raw} when is_binary(url_raw) <- Map.fetch(doc, "url"),
+         {:ok, url} <- Url.new(url_raw) do
       {:ok, Worker.new(uuid, url, period)}
     else
       {:error, _} -> {:error, "Failed to parse worker"}
@@ -66,10 +68,9 @@ defmodule PingWorkers.Infrastructure.Repositories.WorkerRepository do
   end
 
   defp extract_uuid_from_doc(doc) do
-    case doc["_id"] do
-      %BSON.Binary{binary: binary, subtype: :uuid} ->
-        uuid_string = UUID.binary_to_string!(binary)
-        Uuid.from_string(uuid_string)
+    case Map.fetch(doc, "_id") do
+      {:ok, %BSON.Binary{binary: binary, subtype: :uuid}} ->
+        binary |> UUID.binary_to_string!() |> Uuid.from_string()
 
       _ ->
         {:error, "Invalid UUID format in document"}
