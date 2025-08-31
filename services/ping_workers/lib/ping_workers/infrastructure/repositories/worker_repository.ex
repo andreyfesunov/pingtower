@@ -4,7 +4,7 @@ defmodule PingWorkers.Infrastructure.Repositories.WorkerRepository do
   """
 
   alias PingWorkers.Domain.Enums.PeriodType
-  alias PingWorkers.Domain.Models.Worker
+  alias PingWorkers.Domain.Models.{Pagination, Worker}
   alias PingWorkers.Domain.ValueObjects.Url
   alias PingWorkers.Domain.ValueObjects.Uuid
   alias PingWorkers.Infrastructure.Facades.MongodbFacade
@@ -42,6 +42,45 @@ defmodule PingWorkers.Infrastructure.Repositories.WorkerRepository do
     end
   end
 
+  @doc """
+  Gets paged workers with pagination.
+  """
+  @spec query(pos_integer(), pos_integer()) ::
+          {:ok, Pagination.t(Worker.t())} | {:error, String.t()}
+  def query(page, page_size) do
+    case MongodbFacade.get_database() do
+      {:ok, connection, _database} ->
+        offset = (page - 1) * page_size
+        total = get_total_count(connection)
+
+        with {:ok, docs} <- get_paginated_workers(connection, offset, page_size),
+             {:ok, workers} <- parse_workers(docs) do
+          {:ok, Pagination.new(workers, page, page_size, total)}
+        else
+          {:error, reason} ->
+            {:error, "Failed to query or parse workers: #{inspect(reason)}"}
+        end
+
+      {:error, reason} ->
+        {:error, "Failed to get database connection: #{inspect(reason)}"}
+    end
+  end
+
+  @doc """
+  Gets total count of workers.
+  """
+  @spec count() :: {:ok, non_neg_integer()} | {:error, String.t()}
+  def count do
+    case MongodbFacade.get_database() do
+      {:ok, connection, _database} ->
+        total = get_total_count(connection)
+        {:ok, total}
+
+      {:error, reason} ->
+        {:error, "Failed to get database connection: #{inspect(reason)}"}
+    end
+  end
+
   defp prepare_document(worker) do
     uuid_binary = UUID.string_to_binary!(to_string(worker.id))
 
@@ -74,6 +113,44 @@ defmodule PingWorkers.Infrastructure.Repositories.WorkerRepository do
 
       _ ->
         {:error, "Invalid UUID format in document"}
+    end
+  end
+
+  defp get_total_count(connection) do
+    case Mongo.count_documents(connection, "workers", %{}) do
+      {:ok, count} -> count
+      {:error, _} -> 0
+    end
+  end
+
+  defp get_paginated_workers(connection, offset, limit) do
+    options = [
+      skip: offset,
+      limit: limit,
+      sort: %{"created_at" => -1}
+    ]
+
+    case Mongo.find(connection, "workers", %{}, options) do
+      {:error, reason} ->
+        {:error, reason}
+
+      %Mongo.Stream{docs: docs} ->
+        {:ok, docs}
+    end
+  end
+
+  defp parse_workers(docs) do
+    workers =
+      Enum.reduce_while(docs, [], fn doc, acc ->
+        case parse_worker(doc) do
+          {:ok, worker} -> {:cont, [worker | acc]}
+          {:error, _} -> {:halt, {:error, "Failed to parse worker document"}}
+        end
+      end)
+
+    case workers do
+      {:error, reason} -> {:error, reason}
+      workers -> {:ok, Enum.reverse(workers)}
     end
   end
 end

@@ -14,10 +14,6 @@ defmodule PingWorkers.Presentation.Routers.UrlsRouter do
   plug(Plug.Parsers, parsers: [:json], json_decoder: Jason)
   plug(:dispatch)
 
-  get "/" do
-    send_resp(conn, 200, "urls")
-  end
-
   post "/" do
     case CreateUrlRequestModel.new(conn.body_params) do
       {:error, reason} ->
