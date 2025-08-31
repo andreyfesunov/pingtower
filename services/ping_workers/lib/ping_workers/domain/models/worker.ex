@@ -17,6 +17,15 @@ defmodule PingWorkers.Domain.Models.Worker do
           period: PeriodType.t()
         }
 
+  @spec new(Uuid.t(), Url.t(), PeriodType.t()) :: t()
+  def new(id, url, period) do
+    %__MODULE__{
+      id: id,
+      url: url,
+      period: period
+    }
+  end
+
   @spec new(Url.t(), PeriodType.t()) :: t()
   def new(url, period) do
     %__MODULE__{

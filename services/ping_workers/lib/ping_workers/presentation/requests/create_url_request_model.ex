@@ -41,10 +41,7 @@ defmodule PingWorkers.Presentation.Requests.CreateUrlRequestModel do
         {:error, "Period is required"}
 
       period when is_binary(period) ->
-        case PeriodType.from_string(period) do
-          nil -> {:error, "Invalid period"}
-          period_atom -> {:ok, period_atom}
-        end
+        PeriodType.from_string(period)
 
       _ ->
         {:error, "Period must be a string"}

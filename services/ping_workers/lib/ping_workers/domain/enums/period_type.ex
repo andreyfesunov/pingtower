@@ -12,15 +12,15 @@ defmodule PingWorkers.Domain.Enums.PeriodType do
   @spec values() :: [t(), ...]
   def values, do: @values
 
-  @spec from_string(String.t()) :: t() | nil
+  @spec from_string(String.t()) :: {:ok, t()} | {:error, String.t()}
   def from_string(period_str) when is_binary(period_str) do
     case period_str do
-      "minute" -> :minute
-      "hour" -> :hour
-      "day" -> :day
-      "week" -> :week
-      "month" -> :month
-      _ -> nil
+      "minute" -> {:ok, :minute}
+      "hour" -> {:ok, :hour}
+      "day" -> {:ok, :day}
+      "week" -> {:ok, :week}
+      "month" -> {:ok, :month}
+      _ -> {:error, "Invalid period"}
     end
   end
 end

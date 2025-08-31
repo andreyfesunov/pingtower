@@ -15,9 +15,23 @@ services:
       - ../../provisioning:/etc/grafana/provisioning
       - grafana-storage:/var/lib/grafana
 
+  mongodb:
+    image: mongo:7.0
+    container_name: pingtower-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    volumes:
+      - mongodb-storage:/data/db
+    networks:
+      - pingtower-network
+
 volumes:
   grafana-storage:
-  redis-data:
+  mongodb-storage:
 
 networks:
   pingtower-network:

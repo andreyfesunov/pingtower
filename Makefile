@@ -1,4 +1,4 @@
-.PHONY: help up down logs restart clean plugin-dev plugin-build
+.PHONY: help up down logs restart clean plugin-dev plugin-build grafana mongodb grafana-logs mongodb-logs
 
 # Default target
 help:
@@ -8,6 +8,9 @@ help:
 	@echo "  make logs            - Show logs"
 	@echo "  make restart         - Restart all services"
 	@echo "  make grafana         - Start only Grafana"
+	@echo "  make mongodb         - Start only MongoDB"
+	@echo "  make grafana-logs    - Show Grafana logs"
+	@echo "  make mongodb-logs    - Show MongoDB logs"
 	@echo "  make plugin-dev      - Start plugin development mode"
 	@echo "  make plugin-build    - Build plugin for production"
 	@echo "  make clean           - Clean all data"
@@ -31,6 +34,13 @@ grafana:
 grafana-logs:
 	cd infrastructure/docker && docker compose logs -f grafana
 
+# MongoDB specific
+mongodb:
+	cd infrastructure/docker && docker compose up -d mongodb
+
+mongodb-logs:
+	cd infrastructure/docker && docker compose logs -f mongodb
+
 # Plugin development
 plugin-dev:
 	cd plugin && pnpm install && pnpm run dev
@@ -49,3 +59,4 @@ clean:
 # Quick access URLs
 urls:
 	@echo "Grafana:    http://localhost:3000 (admin/admin)"
+	@echo "MongoDB:    mongodb://localhost:27017 (admin/admin)"

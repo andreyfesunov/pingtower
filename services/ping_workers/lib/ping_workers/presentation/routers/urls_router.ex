@@ -15,33 +15,27 @@ defmodule PingWorkers.Presentation.Routers.UrlsRouter do
   plug(:dispatch)
 
   get "/" do
-    send_resp(conn, 200, "apis")
+    send_resp(conn, 200, "urls")
   end
 
   post "/" do
     case CreateUrlRequestModel.new(conn.body_params) do
       {:error, reason} ->
         conn
-        |> send_resp(
-          400,
-          Jason.encode!(%{
-            error: reason
-          })
-        )
+        |> send_resp(400, Jason.encode!(%{error: reason}))
 
       {:ok, request} ->
-        worker =
-          CreateUrlRequestMapper.map(request)
-          |> CreateWorkerUsecase.handle()
-          |> WorkerMapper.map()
+        command = CreateUrlRequestMapper.map(request)
 
-        conn
-        |> send_resp(
-          201,
-          Jason.encode!(%{
-            data: worker
-          })
-        )
+        case CreateWorkerUsecase.handle(command) do
+          {:ok, worker} ->
+            conn
+            |> send_resp(201, Jason.encode!(%{data: WorkerMapper.map(worker)}))
+
+          {:error, reason} ->
+            conn
+            |> send_resp(500, Jason.encode!(%{error: reason}))
+        end
     end
   end
 
