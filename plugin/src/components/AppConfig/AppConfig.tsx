@@ -3,99 +3,103 @@ import { lastValueFrom } from 'rxjs';
 import { css } from '@emotion/css';
 import { AppPluginMeta, GrafanaTheme2, PluginConfigPageProps, PluginMeta } from '@grafana/data';
 import { getBackendSrv } from '@grafana/runtime';
-import { Button, Field, FieldSet, Input, SecretInput, useStyles2 } from '@grafana/ui';
+import { Button, Field, FieldSet, Input, useStyles2, Alert } from '@grafana/ui';
 
 type AppPluginSettings = {
   apiUrl?: string;
 };
 
 type State = {
-  // The URL to reach our custom API.
   apiUrl: string;
-  // Tells us if the API key secret is set.
-  isApiKeySet: boolean;
-  // A secret key for our custom API.
-  apiKey: string;
+  loading: boolean;
+  error: string | null;
+  success: boolean;
 };
 
 export interface AppConfigProps extends PluginConfigPageProps<AppPluginMeta<AppPluginSettings>> {}
 
 const AppConfig = ({ plugin }: AppConfigProps) => {
   const s = useStyles2(getStyles);
-  const { enabled, pinned, jsonData, secureJsonFields } = plugin.meta;
+  const { enabled, pinned, jsonData } = plugin.meta;
   const [state, setState] = useState<State>({
     apiUrl: jsonData?.apiUrl || '',
-    apiKey: '',
-    isApiKeySet: Boolean(secureJsonFields?.apiKey),
+    loading: false,
+    error: null,
+    success: false,
   });
 
-  const isSubmitDisabled = Boolean(!state.apiUrl || (!state.isApiKeySet && !state.apiKey));
-
-  const onResetApiKey = () =>
-    setState({
-      ...state,
-      apiKey: '',
-      isApiKeySet: false,
-    });
+  const isSubmitDisabled = Boolean(!state.apiUrl);
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     setState({
       ...state,
       [event.target.name]: event.target.value.trim(),
+      error: null,
+      success: false,
     });
   };
 
-  const onSubmit = () => {
-    if (isSubmitDisabled) {
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (isSubmitDisabled || state.loading) {
       return;
     }
 
-    updatePluginAndReload(plugin.meta.id, {
-      enabled,
-      pinned,
-      jsonData: {
-        apiUrl: state.apiUrl,
-      },
-      // This cannot be queried later by the frontend.
-      // We don't want to override it in case it was set previously and left untouched now.
-      secureJsonData: state.isApiKeySet
-        ? undefined
-        : {
-            apiKey: state.apiKey,
-          },
-    });
+    setState(prev => ({ ...prev, loading: true, error: null, success: false }));
+
+    try {
+      await updatePluginAndReload(plugin.meta.id, {
+        enabled,
+        pinned,
+        jsonData: {
+          apiUrl: state.apiUrl,
+        },
+      });
+      setState(prev => ({ ...prev, loading: false, success: true }));
+    } catch (error) {
+      console.error('Failed to save settings:', error);
+      setState(prev => ({ 
+        ...prev, 
+        loading: false, 
+        error: error instanceof Error ? error.message : 'Failed to save settings' 
+      }));
+    }
   };
 
   return (
     <form onSubmit={onSubmit}>
       <FieldSet label="API Settings">
-        <Field label="API Key" description="A secret key for authenticating to our custom API">
-          <SecretInput
-            width={60}
-            id="config-api-key"
-            name="apiKey"
-            value={state.apiKey}
-            isConfigured={state.isApiKeySet}
-            placeholder={'Your secret API key'}
-            onChange={onChange}
-            onReset={onResetApiKey}
-          />
-        </Field>
+        {state.error && (
+          <Alert title="Error" severity="error" className={s.marginBottom}>
+            {state.error}
+          </Alert>
+        )}
+        
+        {state.success && (
+          <Alert title="Success" severity="success" className={s.marginBottom}>
+            Settings saved successfully!
+          </Alert>
+        )}
 
-        <Field label="API Url" description="" className={s.marginTop}>
+        <Field label="API Url" description="The URL of your external API">
           <Input
             width={60}
             name="apiUrl"
             id="config-api-url"
             value={state.apiUrl}
-            placeholder={`E.g.: http://mywebsite.com/api/v1`}
+            placeholder="http://localhost:4000"
             onChange={onChange}
+            disabled={state.loading}
           />
         </Field>
 
         <div className={s.marginTop}>
-          <Button type="submit" disabled={isSubmitDisabled}>
-            Save API settings
+          <Button 
+            type="submit" 
+            disabled={isSubmitDisabled || state.loading}
+          >
+            {state.loading ? 'Saving...' : 'Save API settings'}
           </Button>
         </div>
       </FieldSet>
@@ -112,26 +116,32 @@ const getStyles = (theme: GrafanaTheme2) => ({
   marginTop: css`
     margin-top: ${theme.spacing(3)};
   `,
+  marginBottom: css`
+    margin-bottom: ${theme.spacing(3)};
+  `,
 });
 
 const updatePluginAndReload = async (pluginId: string, data: Partial<PluginMeta<AppPluginSettings>>) => {
   try {
+    console.log('Updating plugin settings:', { pluginId, data });
     await updatePlugin(pluginId, data);
-
-    // Reloading the page as the changes made here wouldn't be propagated to the actual plugin otherwise.
-    // This is not ideal, however unfortunately currently there is no supported way for updating the plugin state.
-    window.location.reload();
+    console.log('Plugin settings updated successfully');
   } catch (e) {
     console.error('Error while updating the plugin', e);
+    throw e;
   }
 };
 
 const updatePlugin = async (pluginId: string, data: Partial<PluginMeta>) => {
+  console.log('Making API request to:', `/api/plugins/${pluginId}/settings`);
+  console.log('Request data:', data);
+  
   const response = await getBackendSrv().fetch({
     url: `/api/plugins/${pluginId}/settings`,
     method: 'POST',
     data,
   });
 
+  console.log('API response:', response);
   return lastValueFrom(response);
 };

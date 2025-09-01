@@ -17,21 +17,21 @@ defmodule PingWorkers.Presentation.Routers.WorkersRouter do
 
   get "/" do
     case GetUrlsRequestModel.new(conn.query_params) do
+      {:error, reason} ->
+        send_resp(conn, 400, Jason.encode!(%{error: reason}))
+
       {:ok, model} ->
         case model |> GetUrlsRequestMapper.map() |> GetWorkersUsecase.handle() do
+          {:error, reason} ->
+            send_resp(conn, 500, Jason.encode!(%{error: reason}))
+
           {:ok, pagination} ->
             send_resp(
               conn,
               200,
-              Jason.encode!(%{data: Pagination.mapped(pagination, &WorkerMapper.map/1)})
+              Jason.encode!(Pagination.mapped(pagination, &WorkerMapper.map/1))
             )
-
-          {:error, reason} ->
-            send_resp(conn, 500, Jason.encode!(%{error: reason}))
         end
-
-      {:error, reason} ->
-        send_resp(conn, 400, Jason.encode!(%{error: reason}))
     end
   end
 

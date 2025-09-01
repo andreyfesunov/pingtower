@@ -26,7 +26,7 @@ defmodule PingWorkers.Presentation.Routers.UrlsRouter do
         case CreateWorkerUsecase.handle(command) do
           {:ok, worker} ->
             conn
-            |> send_resp(201, Jason.encode!(%{data: WorkerMapper.map(worker)}))
+            |> send_resp(201, Jason.encode!(WorkerMapper.map(worker)))
 
           {:error, reason} ->
             conn

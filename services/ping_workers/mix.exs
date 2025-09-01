@@ -24,6 +24,7 @@ defmodule PingWorkers.MixProject do
   defp deps do
     [
       {:plug_cowboy, "2.7.4"},
+      {:cors_plug, "3.0.3"},
       {:jason, "1.4.4"},
       {:uuid, "1.1.8"},
       {:mongodb_driver, "1.5.0"},

@@ -20,3 +20,8 @@ config :ping_workers, :rabbitmq, %{
   ssl: false,
   timeout: 5000
 }
+
+config :cors_plug,
+  origin: ["http://localhost:3000"],
+  max_age: 86400,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]

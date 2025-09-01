@@ -51,6 +51,7 @@
     "@grafana/runtime": "^12.1.0",
     "@grafana/schema": "^12.1.0",
     "@grafana/ui": "^12.1.0",
+    "axios": "^1.11.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.8.2",

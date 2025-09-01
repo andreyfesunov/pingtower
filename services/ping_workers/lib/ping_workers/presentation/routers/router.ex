@@ -5,6 +5,7 @@ defmodule PingWorkers.Presentation.Routers.Router do
 
   use Plug.Router
 
+  plug(CORSPlug)
   plug(Plug.Logger)
   plug(:match)
   plug(:dispatch)

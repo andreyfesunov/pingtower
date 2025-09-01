@@ -4,7 +4,8 @@
   "name": "pingtower",
   "id": "pingtower-app",
   "info": {
-    "keywords": ["app"],
+    "description": "Monitor and manage URL workers with customizable check periods",
+    "keywords": ["monitoring", "url", "ping", "workers"],
     "author": {
       "name": "andreyfesunov"
     },
@@ -19,11 +20,25 @@
   "includes": [
     {
       "type": "page",
-      "name": "Entrypoint",
-      "path": "/a/%PLUGIN_ID%/entrypoint",
+      "name": "Workers",
+      "path": "/a/%PLUGIN_ID%/list",
       "addToNav": true,
-      "role": "Admin",
+      "role": "Viewer",
       "defaultNav": true
+    },
+    {
+      "type": "page",
+      "name": "Create Worker",
+      "path": "/a/%PLUGIN_ID%/create",
+      "addToNav": false,
+      "role": "Editor"
+    },
+    {
+      "type": "page",
+      "name": "Create from URL",
+      "path": "/a/%PLUGIN_ID%/create/url",
+      "addToNav": false,
+      "role": "Editor"
     }
   ],
   "dependencies": {
