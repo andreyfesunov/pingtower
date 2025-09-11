@@ -34,4 +34,12 @@ defmodule PingWorkers.Domain.Models.Worker do
       period: period
     }
   end
+
+  @doc """
+  Returns the period in seconds.
+  """
+  @spec period_in_seconds(t()) :: integer()
+  def period_in_seconds(worker) do
+    PeriodType.period_in_seconds(worker.period)
+  end
 end

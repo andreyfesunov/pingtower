@@ -16,7 +16,7 @@ defmodule PingWorkers.MixProject do
   def application do
     [
       mod: {PingWorkers.Application, []},
-      extra_applications: [:logger]
+      extra_applications: [:logger, :inets]
     ]
   end
 

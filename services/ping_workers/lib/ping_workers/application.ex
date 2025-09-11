@@ -11,6 +11,7 @@ defmodule PingWorkers.Application do
       {PingWorkers.Infrastructure.Facades.MongodbFacade, []},
       {PingWorkers.Infrastructure.Facades.AmqpFacade, []},
       {PingWorkers.Infrastructure.Messaging.EventPublisher, []},
+      {PingWorkers.Infrastructure.Jobs.PingJob, []},
       {Plug.Cowboy,
        scheme: :http, plug: PingWorkers.Presentation.Routers.Router, options: [port: 4000]}
     ]

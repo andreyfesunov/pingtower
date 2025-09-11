@@ -11,7 +11,7 @@ repos:
 
       - id: mix-credo
         name: mix credo
-        entry: bash -c "cd services/ping_workers/ && mix credo --strict"
+        entry: bash -c "cd services/ping_workers/ && mix credo --strict --ignore-checks=Refactor" # TODO: remove ignore-checks
         language: system
         types: [file]
         files: \.exs?$

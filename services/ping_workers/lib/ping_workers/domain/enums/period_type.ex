@@ -23,6 +23,21 @@ defmodule PingWorkers.Domain.Enums.PeriodType do
       _ -> {:error, "Invalid period"}
     end
   end
+
+  @doc """
+  Returns the period in seconds.
+  """
+  @spec period_in_seconds(:day | :hour | :minute | :month | :week) ::
+          60 | 3600 | 86_400 | 604_800 | 2_629_746
+  def period_in_seconds(period) do
+    case period do
+      :minute -> 60
+      :hour -> 3600
+      :day -> 86_400
+      :week -> 604_800
+      :month -> 2_629_746
+    end
+  end
 end
 
 defimpl String.Chars, for: PingWorkers.Domain.Enums.PeriodType do
