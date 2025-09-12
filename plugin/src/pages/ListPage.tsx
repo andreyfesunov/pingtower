@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { PluginPage } from '@grafana/runtime';
-import { Alert, Button, Card, Pagination, Select, LoadingPlaceholder, useStyles2 } from '@grafana/ui';
+import { Alert, Button, Card, Pagination, Select, LoadingPlaceholder, useStyles2, Dropdown, Menu } from '@grafana/ui';
 import { Link } from 'react-router-dom';
 import { css } from '@emotion/css';
 import { useWorkers } from '../hooks/useWorkers';
@@ -26,6 +26,16 @@ const ListPage: React.FC<ListPageProps> = ({ pluginMeta }) => {
     clearError,
     refresh,
   } = useWorkers(pluginMeta);
+
+  const handleDeleteWorker = async (workerId: string) => {
+    if (window.confirm('Are you sure you want to delete this worker?')) {
+      try {
+        console.log('Deleting worker:', workerId);
+      } catch (error) {
+        console.error('Failed to delete worker:', error);
+      }
+    }
+  };
 
   useEffect(() => {
     if (isConfigured) {
@@ -74,10 +84,6 @@ const ListPage: React.FC<ListPageProps> = ({ pluginMeta }) => {
     );
   }
 
-
-
-
-
   return (
     <PluginPage>
       <div className={styles.header}>
@@ -104,19 +110,44 @@ const ListPage: React.FC<ListPageProps> = ({ pluginMeta }) => {
         />
       </div>
 
-      <Card>
-        <div className={styles.workersList}>
-          {workers.map(worker => (
-            <div key={worker.id} className={styles.workerItem}>
-              <div className={styles.workerId}>{worker.id}</div>
-              <div className={styles.workerUrl}>{worker.url || 'N/A'}</div>
-            </div>
-          ))}
-          {workers.length === 0 && !loading && (
-            <div className={styles.emptyState}>No workers found</div>
-          )}
-        </div>
-      </Card>
+      <div className={styles.tableContainer}>
+        <table className={styles.workersTable}>
+          <thead>
+            <tr>
+              <th className={styles.actionsHeader}>Actions</th>
+              <th className={styles.urlHeader}>URL</th>
+              <th className={styles.periodHeader}>Period</th>
+            </tr>
+          </thead>
+          <tbody>
+            {workers.length > 0
+              ? workers.map((worker) => (
+                  <tr key={worker.id} className={styles.workerRow}>
+                    <td className={styles.actionsCell}>
+                      <Dropdown
+                        overlay={
+                          <Menu>
+                            <Menu.Item label="Delete" icon="trash-alt" onClick={() => handleDeleteWorker(worker.id)} />
+                          </Menu>
+                        }
+                      >
+                        <Button variant="secondary" icon="ellipsis-v" size="sm" />
+                      </Dropdown>
+                    </td>
+                    <td className={styles.urlCell}>
+                      <div className={styles.urlValue}>{worker.url || 'N/A'}</div>
+                    </td>
+                    <td className={styles.periodCell}>
+                      <div className={styles.periodValue}>{worker.period || 'N/A'}</div>
+                    </td>
+                  </tr>
+                ))
+              : null}
+          </tbody>
+        </table>
+
+        {workers.length === 0 && !loading && <div className={styles.emptyState}>No workers found</div>}
+      </div>
 
       {pagination.total > pagination.page_size && (
         <div className={styles.pagination}>
@@ -183,27 +214,70 @@ const getStyles = () => ({
   retryButton: css`
     margin-top: 12px;
   `,
-  workersList: css`
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+  tableContainer: css`
+    overflow-x: auto;
+    width: 100%;
   `,
-  workerItem: css`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px;
-    border: 1px solid var(--grafana-colors-border-weak);
-    border-radius: 4px;
-    background: var(--grafana-colors-background-secondary);
+  workersTable: css`
+    width: 100%;
+    min-width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    table-layout: fixed;
   `,
-  workerId: css`
-    font-weight: 500;
+  actionsHeader: css`
+    width: 80px;
+    text-align: center;
+    padding: 12px 8px;
+    border-bottom: 1px solid var(--grafana-colors-border-weak);
+    font-weight: 600;
     color: var(--grafana-colors-text-primary);
   `,
-  workerUrl: css`
-    color: var(--grafana-colors-text-secondary);
+  urlHeader: css`
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--grafana-colors-border-weak);
+    font-weight: 600;
+    color: var(--grafana-colors-text-primary);
+    width: auto;
+  `,
+  periodHeader: css`
+    width: 120px;
+    text-align: left;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--grafana-colors-border-weak);
+    font-weight: 600;
+    color: var(--grafana-colors-text-primary);
+  `,
+  workerRow: css`
+    &:hover {
+      background-color: var(--grafana-colors-background-secondary);
+    }
+  `,
+  actionsCell: css`
+    text-align: center;
+    padding: 12px 8px;
+    border-bottom: 1px solid var(--grafana-colors-border-weak);
+  `,
+  urlCell: css`
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--grafana-colors-border-weak);
+    width: auto;
+  `,
+  urlValue: css`
     font-family: monospace;
+    color: var(--grafana-colors-text-primary);
+    word-break: break-all;
+    font-size: 14px;
+  `,
+  periodCell: css`
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--grafana-colors-border-weak);
+  `,
+  periodValue: css`
+    color: var(--grafana-colors-text-primary);
+    font-size: 14px;
+    font-weight: 500;
   `,
   emptyState: css`
     text-align: center;

@@ -16,6 +16,7 @@
           buildInputs = with pkgs; [
             fish
             gnumake
+            python313
           ];
 
           shellHook = ''
@@ -23,6 +24,7 @@
             echo "Available tools:"
             echo "  - fish: ${pkgs.fish.version}"
             echo "  - gnumake: ${pkgs.gnumake.version}"
+            echo "  - python: ${pkgs.python313.version}"
             echo ""
             exec ${pkgs.fish}/bin/fish
           '';

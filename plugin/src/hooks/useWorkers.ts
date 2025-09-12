@@ -29,6 +29,7 @@ export const useWorkers = (pluginMeta: AppPluginMeta<PluginConfig>) => {
   const isConfigured = useMemo(() => {
     return Boolean(pluginMeta.jsonData?.apiUrl);
   }, [pluginMeta.jsonData?.apiUrl]);
+
   const fetchWorkers = useCallback(
     async (page: number = pagination.page, page_size: number = pagination.page_size) => {
       if (!workersApi) {
@@ -52,7 +53,6 @@ export const useWorkers = (pluginMeta: AppPluginMeta<PluginConfig>) => {
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Failed to fetch workers';
         setError(errorMessage);
-        console.error('Error fetching workers:', err);
       } finally {
         setLoading(false);
       }
@@ -87,4 +87,3 @@ export const useWorkers = (pluginMeta: AppPluginMeta<PluginConfig>) => {
     refresh: () => fetchWorkers(),
   };
 };
-

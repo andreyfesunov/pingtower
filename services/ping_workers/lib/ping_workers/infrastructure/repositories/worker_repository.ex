@@ -88,7 +88,7 @@ defmodule PingWorkers.Infrastructure.Repositories.WorkerRepository do
       "_id" => %BSON.Binary{binary: uuid_binary, subtype: :uuid},
       "url" => to_string(worker.url),
       "period" => to_string(worker.period),
-      "created_at" => DateTime.utc_now() |> DateTime.to_iso8601()
+      "created_at" => DateTime.utc_now()
     }
 
     {:ok, doc}

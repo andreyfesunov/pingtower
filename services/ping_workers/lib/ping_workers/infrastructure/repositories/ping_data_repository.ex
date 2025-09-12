@@ -38,10 +38,7 @@ defmodule PingWorkers.Infrastructure.Repositories.PingDataRepository do
             {:error, "No ping data found for this worker"}
 
           %{"request_time" => request_time} ->
-            case DateTime.from_iso8601(request_time) do
-              {:ok, dt, _offset} -> {:ok, dt}
-              {:error, reason} -> {:error, "Failed to parse request_time: #{inspect(reason)}"}
-            end
+            {:ok, request_time}
 
           other ->
             {:error, "Unexpected result: #{inspect(other)}"}
@@ -53,8 +50,8 @@ defmodule PingWorkers.Infrastructure.Repositories.PingDataRepository do
     %{
       "_id" => %BSON.Binary{binary: UUID.string_to_binary!(UUID.uuid4()), subtype: :uuid},
       "url" => to_string(ping_data.url),
-      "request_time" => DateTime.to_iso8601(ping_data.request_time),
-      "response_time" => DateTime.to_iso8601(ping_data.response_time),
+      "request_time" => ping_data.request_time,
+      "response_time" => ping_data.response_time,
       "duration_microseconds" => ping_data.duration_microseconds,
       "http_version" => to_string(ping_data.http_version),
       "status_code" => ping_data.status_code,
