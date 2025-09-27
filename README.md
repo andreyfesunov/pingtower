@@ -1,4 +1,4 @@
-# PingTower 🏗️ (WIP)
+# PingTower 🏗️
 
 [![Elixir](https://img.shields.io/badge/Elixir-4B275F?style=for-the-badge&logo=elixir&logoColor=white)](https://elixir-lang.org/)
 [![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org/)
@@ -12,3 +12,4 @@
 ## Description
 
 PingTower is a comprehensive monitoring system designed to track the health and performance of web services and APIs in real-time. The system automatically creates Grafana dashboards for each new worker and provides detailed performance analytics.
+
